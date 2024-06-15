@@ -23,9 +23,11 @@ if (flutterVersionName == null) {
 }
 
 android {
+   
     namespace "com.example.weather_app"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+    
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -49,6 +51,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+         multiDexEnabled true
     }
 
     buildTypes {
@@ -58,10 +61,19 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    
+    buildscript {
+        ext.kotlin_version = '2.0.0' 
+    }
+
 }
 
 flutter {
     source '../..'
+}
+
+dependencies {
+  implementation 'com.android.support:multidex:1.0.3'
 }
 
 
