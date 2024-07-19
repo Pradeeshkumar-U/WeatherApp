@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 // ignore: depend_on_referenced_packages
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:weather_app/services/appbar.dart';
 import 'package:weather_app/services/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -145,72 +146,14 @@ class LoadingScreenState extends State<LoadingScreen> {
     return GetMaterialApp(
       home: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          toolbarHeight: 200,
-          backgroundColor: Colors.transparent,
-          title: SizedBox(
-            width: kWidth,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.location_on_outlined,
-                  size: 30,
-                  color: Colors.white,
-                ),
-                Text(
-                  cityName,
-                  style: const TextStyle(
-                    shadows: [
-                      Shadow(
-                        offset: Offset(3, 3),
-                        color: Colors.black54,
-                        blurRadius: 30,
-                      ),
-                    ],
-                    fontFamily: 'Quicksand',
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 249, 233, 255),
-                    fontSize: 37,
-                  ),
-                ),
-                cityName.isEmpty
-                    ? const CircularProgressIndicator()
-                    : Text(
-                        '${temperature.toStringAsFixed(2)} °C',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 249, 233, 255),
-                          fontFamily: 'Barlow Condensed',
-                          fontSize: tempHeight,
-                          shadows: const [
-                            Shadow(
-                              offset: Offset(3, 3),
-                              color: Colors.black54,
-                              blurRadius: 30,
-                            ),
-                          ],
-                        ),
-                      ),
-                Text(
-                  condition,
-                  style: const TextStyle(
-                    shadows: [
-                      Shadow(
-                        offset: Offset(3, 3),
-                        color: Color.fromARGB(57, 0, 0, 0),
-                        blurRadius: 30,
-                      ),
-                    ],
-                    fontFamily: 'Quicksand',
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 249, 233, 255),
-                    fontSize: 30,
-                  ),
-                )
-              ],
-            ),
-          ),
+        appBar: PreferredSize(
+          preferredSize: Size(kWidth, 200),
+          child: MyAppBar(
+              kWidth: kWidth,
+              cityName: cityName,
+              temperature: temperature,
+              tempHeight: tempHeight,
+              condition: condition),
         ),
         body: SlidingUpPanel(
           backdropEnabled: true,
