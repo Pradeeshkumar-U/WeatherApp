@@ -25,11 +25,11 @@ String getWeatherIcon(int condition) {
 String getMessage(int temp) {
   if (temp == 0) {
     return 'Loading data...';
-  } else if (temp > 25) {
-    return 'It\'s 🍦 time and enjoy the day';
-  } else if (temp > 20) {
+  } else if (temp < 700) {
+    return 'It\'s ☔ time and so wet and cool';
+  } else if (temp == 800) {
     return 'Time for shorts and 👕 and Beach';
-  } else if (temp < 10) {
+  } else if (temp < 800) {
     return 'You\'ll need 🧣 and 🧤 and enjoy the day';
   } else {
     return 'Not too cold or hot enjoy the day 🌞';
@@ -71,7 +71,7 @@ class WeatherModel {
               style: const TextStyle(
                   color: Color.fromARGB(255, 249, 233, 255),
                   fontFamily: 'Quicksand',
-                  fontSize: 24,
+                  fontSize: 22,
                   shadows: [
                     Shadow(
                       offset: Offset(3, 3),

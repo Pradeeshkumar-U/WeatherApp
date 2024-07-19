@@ -330,7 +330,7 @@ class LoadingScreenState extends State<LoadingScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 130.0, left: 20),
                       child: Text(
-                        getMessage(temperature.toInt()),
+                        getMessage(conditionID),
                         style: const TextStyle(
                           shadows: [
                             Shadow(
