@@ -1,16 +1,15 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 // ignore: depend_on_referenced_packages
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:weather_app/screens/city_screen.dart';
 import 'package:weather_app/services/location.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/services/networking.dart';
+import 'package:weather_app/services/search.dart';
 import 'package:weather_app/services/weather.dart';
 
 const apiKey = '1b0a0647a5c4db9adab3c093d2c746c2';
@@ -38,10 +37,26 @@ class LoadingScreenState extends State<LoadingScreen> {
   int pressure = 0;
   int humidity = 0;
   int windDir = 0;
-  double windSpeed = 0.0;
+  int windSpeed = 0;
   String windAng = '';
 
   MyLocation location = MyLocation();
+
+  final List<String> _cityName = [];
+
+  Future<void> readJson() async {
+    final String response =
+        await rootBundle.loadString('assets/json/city.list.json');
+    final data = await json.decode(response);
+    for (int i = 0; i < 209579; i++) {
+      if (data[i]['country'] == 'IN') {
+        setState(() {
+          _cityName.add(data[i]['name']);
+          _cityName.sort();
+        });
+      } else {}
+    }
+  }
 
   @override
   void initState() {
@@ -49,6 +64,7 @@ class LoadingScreenState extends State<LoadingScreen> {
 
     location.checker();
     getLocation();
+    readJson();
   }
 
   @override
@@ -94,7 +110,7 @@ class LoadingScreenState extends State<LoadingScreen> {
         sunset = DateFormat('hh:mm:ss a')
             .format(DateTime(decodedData['sys']['sunset']));
         windDir = decodedData['wind']['deg'];
-        windSpeed = decodedData['wind']['speed'];
+        windSpeed = decodedData['wind']['speed'].toInt();
         if (windDir < 90 && windDir > 0) {
           windAng = 'Northeast';
         } else if (windDir < 180 && windDir > 90) {
@@ -265,8 +281,25 @@ class LoadingScreenState extends State<LoadingScreen> {
                                     const Color.fromARGB(255, 86, 0, 156),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24)),
-                                onPressed: () {
-                                  Get.to(const CityName());
+                                onPressed: () async {
+                                  final result = await showSearch<String>(
+                                    delegate: SearchBox(cityName: _cityName),
+                                    context: context,
+                                  );
+                                  if (result != '') {
+                                    http.Response newRes = await http.get(Uri.parse(
+                                        'https://api.openweathermap.org/data/2.5/weather?q=$result&appid=$apiKey'));
+                                    String newData = newRes.body;
+                                    var newDecodedData = jsonDecode(newData);
+                                    setState(() {
+                                      latitude = newDecodedData['coord']['lat'];
+                                      longitude =
+                                          newDecodedData['coord']['lon'];
+                                    });
+                                    getData();
+                                  } else {
+                                    getLocation();
+                                  }
                                 },
                                 child: const Icon(
                                   Icons.location_searching,
@@ -317,7 +350,7 @@ class LoadingScreenState extends State<LoadingScreen> {
                 ),
               ),
               Align(
-                alignment: const Alignment(1.5, -0.25),
+                alignment: const Alignment(1.2, -0.25),
                 child: Image.asset(
                   getWeatherIcon(
                     conditionID,

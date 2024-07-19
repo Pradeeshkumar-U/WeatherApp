@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/services/weather.dart';
 
@@ -11,7 +10,7 @@ Widget buildingScrollPanel(
     int pressure,
     int humidity,
     int windDir,
-    double windSpeed,
+    int windSpeed,
     String windAng,
     double width) {
   return Stack(
