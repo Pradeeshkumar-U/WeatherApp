@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Projects/weather_app/linux"
+    "cmake.sourceDirectory": "D:/Projects/weather_app/linux",
+    "C_Cpp.errorSquiggles": "disabled"
 }
