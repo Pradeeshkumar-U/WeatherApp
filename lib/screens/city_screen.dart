@@ -20,7 +20,7 @@ class _CityNameState extends State<CityName> {
     final String response =
         await rootBundle.loadString('assets/json/city.list.json');
     final data = await json.decode(response);
-    for (int i = 0; i <= 102908597; i++) {
+    for (int i = 0; i < 209579; i++) {
       setState(() {
         _cityName += data[i]['name'];
       });
